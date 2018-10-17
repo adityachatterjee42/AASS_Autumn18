@@ -1,36 +1,39 @@
-var faker = require('faker');
+var faker = require('faker')
 const { Client } = require('pg')
 
-var guestCount = 50;
-var hotelCount = 5;
-var roomCount = 10;
-var reservationCount = 100;
+var client 
 
-const client = new Client({
-    user: 'masterusername',
-    host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
-    database: 'hotelreservation',
-    password: 'aass!!07poooooooo',
-    port: 5432
-  });
-
-client.connect();
-
-faker.locale = 'en_US';
+function addRecords(guests, hotels, rooms, reservations){
+     client = new Client({
+        user: 'masterusername',
+        host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
+        database: 'hotelreservation',
+        password: 'aass!!07',
+        port: 5432
+      });
+    
+    client.connect();
+    
+    faker.locale = 'en_US';
+    createGuests(guests);
+    createHotels(hotels);
+    createRooms(rooms);
+    createReservations(reservations);
+}
 
 function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
-  }
+}
 
-exports.createGuests = function(n){
+function createGuests(n){
     for(var guestid=1; guestid<=n; guestid++){
         var text = 
         `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) 
         VALUES(${guestid}, 
-        '${faker.name.firstName()}',
-        '${faker.name.lastName()}',
-        '${faker.address.streetAddress()}',
-        '${faker.address.city()}',
+        "${faker.name.firstName()}",
+        "${faker.name.lastName()}",
+        "${faker.address.streetAddress()}",
+        "${faker.address.city()}",
         ${faker.address.zipCode()}
         ) RETURNING *`;
         client.query(text)
@@ -39,14 +42,14 @@ exports.createGuests = function(n){
     }
 }
 
-exports.createRooms = function(n, r){
+function createRooms(r){
     for(var hotelid=1; hotelid<=n; hotelid++){
         for(var roomnumber=1; roomnumber<=r; roomnumber++){
             var text = 
             `INSERT INTO room(roomid, roomnumber, hotelid) 
             VALUES(${hotelid*100+roomnumber}, 
-            '${roomnumber}',
-            '${hotelid}'
+            "${roomnumber}",
+            "${hotelid}"
             ) RETURNING *`;
             client.query(text)
             .then(res => console.log(res.rows[0]))
@@ -55,14 +58,14 @@ exports.createRooms = function(n, r){
     }
 }
 
-exports.createHotels = function(n){
+function createHotels(n){
     for(var hotelid=1; hotelid<=n; hotelid++){
         var text = 
         `INSERT INTO hotel(hotelid, hotelname, address, city, zipcode) 
         VALUES(${hotelid}, 
-        '${faker.company.companyName()}',
-        '${faker.address.streetAddress()}',
-        '${faker.address.city()}',
+        "${faker.company.companyName()}",
+        "${faker.address.streetAddress()}",
+        "${faker.address.city()}",
         ${faker.address.zipCode()}
         ) RETURNING *`;
         client.query(text)
@@ -72,7 +75,7 @@ exports.createHotels = function(n){
     }
 }
 
-exports.createReservations = function(n, g, h, r){
+function createReservations(n, g, h, r){
     for(var i=1; i<=n; i++){
         var hotel = getRandom(1, h);
         var room = getRandom(1, r);
@@ -93,5 +96,4 @@ exports.createReservations = function(n, g, h, r){
     }
 }
 
-
-
+module.exports = addRecords;
