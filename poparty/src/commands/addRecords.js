@@ -5,25 +5,12 @@ const { Client } = require('pg')
 class AddRecordsCommand extends Command {
   async run() {
     const {flags} = this.parse(AddRecordsCommand)
-    const table = flags.table || null
-    const records = flags.records || 0
-    this.log(`Attempting to insert ${records} records into table ${table}`)
-    switch(table){
-      case 'guests':
-        //dosomething
-        break;
-      case 'guests':
-        //dosomething
-        break;
-      case 'guests':
-        //dosomething
-        break;
-      case 'guests':
-        //dosomething
-        break;
-
-
-    }
+    const guests = flags.guests || 0
+    const hotels = flags.hotels || 0
+    const rooms = flags.rooms || 0
+    const reservations = flags.reservations || 0
+    this.log(`Attempting to insert ${guests + hotels + rooms + reservations} records into database`)
+    
   }
 }
 
