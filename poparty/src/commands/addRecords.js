@@ -14,14 +14,16 @@ class AddRecordsCommand extends Command {
   }
 }
 
-HelloCommand.description = `This command inserts a specified number of records containing synthetic data into a specified table in the schema
+AddRecordsCommand.description = ` This command inserts synthetic data into an AWS postgres instance containing a database of hotels and reservations - the intended use is to rapidly load data in order to run database performance experiments
 ...
 Extra documentation goes here
 `
 
 HelloCommand.flags = {
-  table: flags.string({char: 't', description: 'table to insert data into'}),
-  records: flags.integer({char: 'r', description: 'number of records to insert'})
+  guests: flags.integer({char: 'g', description: 'number of records to insert into guests table'}),
+  hotels: flags.integer({char: 'h', description: 'number of records to insert into hotels table'}),
+  hotels: flags.integer({char: 'h', description: 'number of records to insert into hotels table'}),
+  hotels: flags.integer({char: 'h', description: 'number of records to insert into hotels table'}),
 }
 
 module.exports = AddRecordsCommand
@@ -30,17 +32,11 @@ module.exports = AddRecordsCommand
 //!---warning old code below here---!
 //-----------------------------------
 
-
-var guestCount = 50;
-var hotelCount = 5;
-var roomCount = 10;
-var reservationCount = 100;
-
 const client = new Client({
     user: 'masterusername',
     host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
     database: 'hotelreservation',
-    password: 'aass!!07poooooooo',
+    password: 'aass!!07',
     port: 5432
   });
 
