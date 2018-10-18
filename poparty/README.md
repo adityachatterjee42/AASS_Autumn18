@@ -99,7 +99,7 @@ USAGE
   $ poparty purge
 
 OPTIONS
-  -n, --name=name  name to print
+  -l, --logs  delete performance metrics log table
 
 DESCRIPTION
   ...
