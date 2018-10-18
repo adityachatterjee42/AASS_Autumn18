@@ -1,5 +1,5 @@
 const {Command, flags} = require('@oclif/command')
-const { createGuests, createHotels, createRooms, createReservations } = require('../operations/populateDatabase')
+const { createGuests, createHotels, createRooms, createReservations, addPerfData } = require('../operations/populateDatabase')
 const perfy = require('perfy')
 
 class AddRecordsCommand extends Command {
@@ -10,11 +10,15 @@ class AddRecordsCommand extends Command {
     const rooms = flags.rooms || 0
     const reservations = flags.reservations || 0
     if(guests>0) {
-      this.log(`Attempting to insert ${guests} guest records into database`)
+      this.log(`Attempting to insert ${guests} hotel records into database`)
       perfy.start('guest-inserts')
       await createGuests(guests)
       var result = perfy.end('guest-inserts');
       console.log(`Insertion took ${result.time}`);
+      if(flags.save==true){
+        console.log('saving');
+        await addPerfData(guests, result.time);
+      }
     }
     if(hotels>0) {
       this.log(`Attempting to insert ${hotels} hotel records into database`)
@@ -42,6 +46,7 @@ AddRecordsCommand.flags = {
   hotels: flags.integer({char: 'h', description: 'number of records to insert into hotels table'}),
   rooms: flags.integer({char: 'r', description: 'number of records to insert into rooms table'}),
   reservations: flags.integer({char: 'x', description: 'number of records to insert into reservations table'}),
+  save: flags.boolean({char: 's', default: false, description: 'save performance data into results_log table'}),
 }
 
 module.exports = AddRecordsCommand

@@ -93,3 +93,16 @@ exports.createReservations = async function(n, g, h, r){
     }
     await client.end();
 }
+
+exports.addPerfData = async function(records, time) {
+    client = createClient();
+    client.connect();
+    var text =
+    `INSERT INTO results_log(description, time_elapsed)
+    VALUES(${records},
+    ${time}
+    )`;
+    var res = await client.query(text);
+    return res;
+    await client.end();
+}
