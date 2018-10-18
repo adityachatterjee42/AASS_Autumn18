@@ -1,6 +1,6 @@
 {
   "name": "poparty",
-  "description": "postgres party!",
+  "description": "postgres party is a command line tool to simplify performance PostgreSQL performance experiments for IMT 563: Advanced Topics in Relational and Non-Relational Databases, Autumn 2018.",
   "version": "0.0.0",
   "author": "Aditya Chatterjee @adityachatterjee42",
   "bin": {
