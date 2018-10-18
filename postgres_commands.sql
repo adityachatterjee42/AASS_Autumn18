@@ -58,6 +58,12 @@ create index reservation_index2 on reservation (guestid); -- default is btree
 drop index reservation_index
 drop index reservation_index2
 
-
-
-
+CREATE TABLE public.results_log
+(
+    log_id serial primary key,
+    batch_size int,
+	index_desc varchar(80),
+	time_elapsed numeric(12,4),
+	throughput int default 0,
+	notes varchar(80)
+)
