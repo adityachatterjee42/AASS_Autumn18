@@ -58,6 +58,7 @@ create index reservation_index2 on reservation (guestid); -- default is btree
 drop index reservation_index
 drop index reservation_index2
 
+--create results table
 CREATE TABLE public.results_log
 (
     log_id serial primary key,
@@ -67,3 +68,22 @@ CREATE TABLE public.results_log
 	throughput int default 0,
 	notes varchar(80)
 )
+
+-- truncate tables
+do
+$$
+declare
+  l_stmt text;
+begin
+  select 'truncate ' || string_agg(format('%I.%I', schemaname, tablename), ',')
+    into l_stmt
+  from pg_tables
+  where schemaname in ('public');
+
+  execute l_stmt;
+end;
+$$
+
+
+
+

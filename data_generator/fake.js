@@ -6,13 +6,13 @@ var hotelCount = 5;
 var roomCount = 10;
 var reservationCount = 100;
 
-const client = new Client({
+const client = new Client ({
     user: 'masterusername',
     host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
     database: 'hotelreservation',
     password: 'aass!!07poooooooo',
     port: 5432
-  });
+});
 
 client.connect();
 
@@ -20,9 +20,9 @@ faker.locale = 'en_US';
 
 function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
-  }
+}
 
-function createGuests(n){
+exports.createGuests = function(n){
     for(var guestid=1; guestid<=n; guestid++){
         var text = 
         `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) 
@@ -39,7 +39,7 @@ function createGuests(n){
     }
 }
 
-function createRooms(n, r){
+exports.createRooms = function(n, r) {
     for(var hotelid=1; hotelid<=n; hotelid++){
         for(var roomnumber=1; roomnumber<=r; roomnumber++){
             var text = 
@@ -55,7 +55,7 @@ function createRooms(n, r){
     }
 }
 
-function createHotels(n){
+exports.createHotels = function(n) {
     for(var hotelid=1; hotelid<=n; hotelid++){
         var text = 
         `INSERT INTO hotel(hotelid, hotelname, address, city, zipcode) 
@@ -72,7 +72,7 @@ function createHotels(n){
     }
 }
 
-function createReservations(n, g, h, r){
+exports.createReservations = function(n, g, h, r) {
     for(var i=1; i<=n; i++){
         var hotel = getRandom(1, h);
         var room = getRandom(1, r);
@@ -94,8 +94,4 @@ function createReservations(n, g, h, r){
 }
 
 
-//createGuests(guestCount);
-//createHotels(hotelCount);
-//createRooms(hotelCount, roomCount);
-createReservations(reservationCount, guestCount, hotelCount, roomCount);
 
