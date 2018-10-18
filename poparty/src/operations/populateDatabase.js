@@ -24,10 +24,10 @@ exports.createGuests = async function(n){
         var text = 
         `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) 
         VALUES(${guestid}, 
-        '${faker.name.firstName()}',
-        '${faker.name.lastName()}',
-        '${faker.address.streetAddress()}',
-        '${faker.address.city()}',
+        '${faker.name.firstName().replace(/'/g, "")}',
+        '${faker.name.lastName().replace(/'/g, "")}',
+        '${faker.address.streetAddress().replace(/'/g, "")}',
+        '${faker.address.city().replace(/'/g, "")}',
         ${faker.address.zipCode()}
         )`;
         var res = await client.query(text);

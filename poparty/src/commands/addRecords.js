@@ -1,5 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 const { createGuests, createHotels, createRooms, createReservations } = require('../operations/populateDatabase')
+const perfy = require('perfy')
 
 class AddRecordsCommand extends Command {
   async run() {
@@ -10,7 +11,10 @@ class AddRecordsCommand extends Command {
     const reservations = flags.reservations || 0
     if(guests>0) {
       this.log(`Attempting to insert ${guests} guest records into database`)
+      perfy.start('guest-inserts')
       await createGuests(guests)
+      var result = perfy.end('guest-inserts');
+      console.log(`Insertion took ${result.time}`);
     }
     if(hotels>0) {
       this.log(`Attempting to insert ${hotels} hotel records into database`)
