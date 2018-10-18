@@ -10,20 +10,21 @@ class AddRecordsCommand extends Command {
     const reservations = flags.reservations || 0
     if(guests>0) {
       this.log(`Attempting to insert ${guests} guest records into database`)
-      createGuests(guests)
+      await createGuests(guests)
     }
     if(hotels>0) {
-      this.log(`Attempting to insert ${hotels} guest records into database`)
-      createGuests(hotels)
+      this.log(`Attempting to insert ${hotels} hotel records into database`)
+      await createHotels(hotels)
     }
-    if(rooms>0) {
-      this.log(`Attempting to insert ${rooms} guest records into database`)
-      createGuests(rooms)
+    if(rooms>0 && hotels>0) {
+      this.log(`Attempting to insert ${rooms} room records into database`)
+      await createRooms(rooms, hotels)
     }
-    if(reservations>0) {
-      this.log(`Attempting to insert ${reservations} guest records into database`)
-      createGuests(reservations)
+    if(reservations>0 && rooms>0 && hotels>0 && guests>0) {
+      this.log(`Attempting to insert ${reservations} reservation records into database`)
+      await createReservations(reservations, guests, hotels, rooms)
     }
+    process.exit(0);
   }
 }
 
@@ -32,7 +33,7 @@ AddRecordsCommand.description = ` This command inserts synthetic data into an AW
 Extra documentation goes here
 `
 
-HelloCommand.flags = {
+AddRecordsCommand.flags = {
   guests: flags.integer({char: 'g', description: 'number of records to insert into guests table'}),
   hotels: flags.integer({char: 'h', description: 'number of records to insert into hotels table'}),
   rooms: flags.integer({char: 'r', description: 'number of records to insert into rooms table'}),
