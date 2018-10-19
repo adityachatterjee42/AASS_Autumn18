@@ -1,5 +1,6 @@
 var faker = require('faker')
 const { Client } = require('pg')
+const perfy = require('perfy')
 
 function createClient(){
     client = new Client({
@@ -34,6 +35,27 @@ exports.createGuests = async function(n){
         //console.log(res);
     }
     await client.end();
+}
+
+exports.createGuestsBulk = async function(n){
+    client = createClient();
+    client.connect();
+    var text = `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) VALUES`;
+    for(var guestid=1; guestid<=n; guestid++){
+        text += 
+        `(${guestid}, 
+        '${faker.name.firstName().replace(/'/g, "")}',
+        '${faker.name.lastName().replace(/'/g, "")}',
+        '${faker.address.streetAddress().replace(/'/g, "")}',
+        '${faker.address.city().replace(/'/g, "")}',
+        ${faker.address.zipCode()}
+        ),`;
+    }
+    text = text.substring(0, text.length - 1);
+
+    var res = await client.query(text);
+    await client.end();
+    
 }
 
 exports.createRooms = async function(r, n){
@@ -94,15 +116,19 @@ exports.createReservations = async function(n, g, h, r){
     await client.end();
 }
 
-exports.addPerfData = async function(records, time) {
+exports.addPerfData = async function(records, time, bulk=false) {
     client = createClient();
     client.connect();
+    var comment = bulk?'from_client_bulk':'from_client';
     var text =
-    `INSERT INTO results_log(description, time_elapsed)
-    VALUES(${records},
-    ${time}
+    `INSERT INTO results_log(batch_size, index_desc, time_elapsed, throughput, notes) VALUES(${records},
+    'standard',
+    ${time},
+    ${records/time},
+    '${comment}'
     )`;
     var res = await client.query(text);
     return res;
     await client.end();
 }
+

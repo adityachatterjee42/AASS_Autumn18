@@ -1,5 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 const { purge } = require('../operations/purgeDatabase')
+const perfy = require('perfy')
 
 class PurgeCommand extends Command {
   async run() {
