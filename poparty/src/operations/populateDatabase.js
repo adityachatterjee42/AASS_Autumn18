@@ -1,6 +1,7 @@
 var faker = require('faker')
 const { Client } = require('pg')
 const perfy = require('perfy')
+const stats = require('stats-lite')
 
 function createClient(){
     client = new Client({
@@ -33,9 +34,7 @@ exports.createGuests = async function(n){
         ${faker.address.zipCode()}
         )`;
         queries.push(text);
-    }
-    for(query in queries){
-        var res = await client.query(query);
+        var res = await client.query(text);
         //console.log(res);
     }
     await client.end();
@@ -123,7 +122,8 @@ exports.createReservations = async function(n, g, h, r){
 exports.addPerfData = async function(records, time, bulk=false) {
     client = createClient();
     client.connect();
-    var comment = bulk?'from_client_bulk':'from_client';
+    //var comment = bulk?'from_client_bulk':'from_client';
+    var comment = 'from_client_bulk_clustered'
     var text =
     `INSERT INTO results_log(batch_size, index_desc, time_elapsed, throughput, notes) VALUES(${records},
     'standard',
@@ -134,5 +134,24 @@ exports.addPerfData = async function(records, time, bulk=false) {
     var res = await client.query(text);
     return res;
     await client.end();
+}
+
+exports.latency = async function() {
+    client = createClient();
+    client.connect();
+    var results = [];
+    for(var i=1; i<=100; i++){
+        perfy.start('latency');
+        await client.query('SELECT 1;');
+        var res =  await perfy.end('latency').time;
+        results.push(res);
+    }
+    return {
+        'mean': stats.mean(results),
+        'median': stats.median(results),
+        'variance': stats.variance(results),
+        'sd': stats.stdev(results) 
+    };
+    
 }
 

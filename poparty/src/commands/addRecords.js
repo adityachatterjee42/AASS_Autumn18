@@ -1,5 +1,5 @@
 const {Command, flags} = require('@oclif/command')
-const { createGuests, createHotels, createRooms, createReservations, addPerfData, createGuestsBulk } = require('../operations/populateDatabase')
+const { createGuests, createHotels, createRooms, createReservations, addPerfData, createGuestsBulk, latency } = require('../operations/populateDatabase')
 const perfy = require('perfy')
 
 class AddRecordsCommand extends Command {
@@ -9,6 +9,11 @@ class AddRecordsCommand extends Command {
     const hotels = flags.hotels || 0
     const rooms = flags.rooms || 0
     const reservations = flags.reservations || 0
+    if(flags.latency==true){
+      var time = await latency();
+      console.log(time);
+      process.exit(0);
+    }
     if(guests>0) {
       if(flags.bulk==true){
         this.log(`Attempting to BULK insert ${guests} guest records into database`)
@@ -55,7 +60,8 @@ AddRecordsCommand.flags = {
   rooms: flags.integer({char: 'r', description: 'number of records to insert into rooms table'}),
   reservations: flags.integer({char: 'x', description: 'number of records to insert into reservations table'}),
   save: flags.boolean({char: 's', default: false, description: 'save performance data into results_log table'}),
-  bulk: flags.boolean({char: 'b', default: false, description: 'use bulk load syntax (currently available only for guests)'})
+  bulk: flags.boolean({char: 'b', default: false, description: 'use bulk load syntax (currently available only for guests)'}),
+  latency: flags.boolean({char: 'l', default: false, description: 'basic latency experiment'})
 }
 
 module.exports = AddRecordsCommand
