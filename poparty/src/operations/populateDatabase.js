@@ -33,11 +33,11 @@ exports.createGuests = async function(n){
         '${faker.address.city().replace(/'/g, "")}',
         ${faker.address.zipCode()}
         )`;
-        queries.push(text);
-        var res = await client.query(text);
-        //console.log(res);
+        queries.push(client.query(text));
     }
-    await client.end();
+    await Promise.all(queries);
+
+    client.end();
 }
 
 exports.createGuestsBulk = async function(n){
