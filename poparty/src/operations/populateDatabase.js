@@ -21,6 +21,7 @@ function getRandom(min, max) {
 exports.createGuests = async function(n){
     client = createClient();
     client.connect();
+    var queries = [];
     for(var guestid=1; guestid<=n; guestid++){
         var text = 
         `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) 
@@ -31,7 +32,10 @@ exports.createGuests = async function(n){
         '${faker.address.city().replace(/'/g, "")}',
         ${faker.address.zipCode()}
         )`;
-        var res = await client.query(text);
+        queries.push(text);
+    }
+    for(query in queries){
+        var res = await client.query(query);
         //console.log(res);
     }
     await client.end();
