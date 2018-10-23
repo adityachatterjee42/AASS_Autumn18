@@ -1,5 +1,5 @@
 const {Command, flags} = require('@oclif/command')
-const { createGuests, createHotels, createRooms, createReservations, addPerfData, createGuestsBulk, latency } = require('../operations/populateDatabase')
+const { createGuests, createHotels, createRooms, createReservations, addPerfData, createGuestsBatch, latency } = require('../operations/populateDatabase')
 const perfy = require('perfy')
 
 class AddRecordsCommand extends Command {
@@ -9,6 +9,8 @@ class AddRecordsCommand extends Command {
     const hotels = flags.hotels || 0
     const rooms = flags.rooms || 0
     const reservations = flags.reservations || 0
+    const batchsize = flags.batchsize || 1
+    const comment = flags.comment
     if(flags.latency==true){
       var time = await latency();
       console.log(time);
@@ -18,7 +20,7 @@ class AddRecordsCommand extends Command {
       if(flags.bulk==true){
         this.log(`Attempting to BULK insert ${guests} guest records into database`)
         perfy.start('guest-inserts')
-        await createGuestsBulk(guests)
+        await createGuestsBatch(guests, batchsize)
         var result = perfy.end('guest-inserts');
       }
       else {
@@ -30,7 +32,7 @@ class AddRecordsCommand extends Command {
       console.log(`Insertion took ${result.time}`);
       if(flags.save==true){
         console.log('saving');
-        await addPerfData(guests, result.time, flags.bulk);
+        await addPerfData(guests, result.time, flags.bulk, comment);
       }
     }
     if(hotels>0) {
@@ -61,6 +63,8 @@ AddRecordsCommand.flags = {
   reservations: flags.integer({char: 'x', description: 'number of records to insert into reservations table'}),
   save: flags.boolean({char: 's', default: false, description: 'save performance data into results_log table'}),
   bulk: flags.boolean({char: 'b', default: false, description: 'use bulk load syntax (currently available only for guests)'}),
+  batchsize: flags.integer({char: 'n', default: 0, description: 'batch size'}),
+  comment: flags.string({char: 'c', default: '', description: 'comment'}),
   latency: flags.boolean({char: 'l', default: false, description: 'basic latency experiment'})
 }
 

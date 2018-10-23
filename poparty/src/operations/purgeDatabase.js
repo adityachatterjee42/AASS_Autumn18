@@ -24,4 +24,3 @@ exports.purge = async function(deleteLogs){
     }
     client.end();
 }
-//TODO: update logging because the table has changed!

@@ -40,7 +40,7 @@ exports.createGuests = async function(n){
     client.end();
 }
 
-exports.createGuestsBulk = async function(n){
+exports.createGuestsBulk = async function(n) {
     client = createClient();
     client.connect();
     var text = `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) VALUES`;
@@ -59,6 +59,28 @@ exports.createGuestsBulk = async function(n){
     var res = await client.query(text);
     await client.end();
     
+}
+
+exports.createGuestsBatch = async function(n, b) {
+    client = createClient();
+    client.connect();
+    var guestid = 1;
+    for(var i=0; i<n/b; i++){
+        var text = `INSERT INTO guest(guestid, firstname, lastname, address, city, zipcode) VALUES`;
+        for(var j=0; j<b; j++){
+        text += 
+        `(${guestid++}, 
+        '${faker.name.firstName().replace(/'/g, "")}',
+        '${faker.name.lastName().replace(/'/g, "")}',
+        '${faker.address.streetAddress().replace(/'/g, "")}',
+        '${faker.address.city().replace(/'/g, "")}',
+        ${faker.address.zipCode()}
+        ),`;
+        }
+        text = text.substring(0, text.length - 1);
+        var res = await client.query(text);     
+    }
+    await client.end();
 }
 
 exports.createRooms = async function(r, n){
