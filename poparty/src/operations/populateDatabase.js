@@ -108,9 +108,9 @@ exports.createHotels = async function(n){
         var text = 
         `INSERT INTO hotel(hotelid, hotelname, address, city, zipcode) 
         VALUES(${hotelid}, 
-        '${faker.company.companyName()}',
-        '${faker.address.streetAddress()}',
-        '${faker.address.city()}',
+        '${faker.company.companyName().replace(/'/g, "")}',
+        '${faker.address.streetAddress().replace(/'/g, "")}',
+        '${faker.address.city().replace(/'/g, "")}',
         ${faker.address.zipCode()}
         )`;
         var res = await client.query(text);
@@ -128,8 +128,9 @@ exports.createReservations = async function(n, g, h, r){
         var guest = getRandom(1, g);
         var roomid = hotel*100+room;
         var text = 
-        `INSERT INTO reservation(reservationid, roomid, guestid, checkindate, numberofdays) 
+        `INSERT INTO reservation(reservationid, hotelid, roomid, guestid, checkindate, numberofdays) 
         VALUES(${i}, 
+        ${hotel},
         ${roomid},
         ${guest},
         NOW() - '1 day'::INTERVAL * ROUND(RANDOM() * 100),
@@ -141,11 +142,10 @@ exports.createReservations = async function(n, g, h, r){
     await client.end();
 }
 
-exports.addPerfData = async function(records, time, bulk=false) {
+exports.addPerfData = async function(records, time, bulk=false, comment) {
     client = createClient();
     client.connect();
-    //var comment = bulk?'from_client_bulk':'from_client';
-    var comment = 'from_client_bulk_clustered'
+    //var comment = bulk?'from_client_bulk':'from_client';w
     var text =
     `INSERT INTO results_log(batch_size, index_desc, time_elapsed, throughput, notes) VALUES(${records},
     'standard',
