@@ -21,11 +21,12 @@ order by No_of_guests DESC
 
 -- mapping rooms with hotels and hotel name
 create view v_hotelroom as
-select h.hotelid, r.roomid, h.hotelname, 
-r.roomtype, r.roomnumber 
+select h.hotelid, count(r.roomid), h.hotelname,
+r.roomtype
 from hotel h
 join room r
 on r.hotelid = h.hotelid
+group by h.hotelid, r.roomtype;
 
 
 select * from information_schema.table_constraints where
