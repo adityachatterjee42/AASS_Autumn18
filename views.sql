@@ -11,11 +11,10 @@ left join hotel on res.hotelid = hotel.hotelid
 
 -- how many guests made reservations for each hotel
 
-create view groupby_view as 
+create view v_hotel_guest as
 select hotel.hotelname, count(res.guestid) as No_of_guests
 from reservation res
 left join guest on res.guestid = guest.guestid
-left join room on res.roomid = room.roomid
 left join hotel on res.hotelid = hotel.hotelid
 group by hotel.hotelname
 order by No_of_guests DESC
