@@ -1,7 +1,7 @@
 
 -- total reservations with hotel, room and guest data
-create view join_view as 
-select res.reservationid, res.hotelid, res.guestid, guest.firstname, guest.lastname, hotel.hotelname, hotel.address as Hotel_Address, 
+create view master_view as 
+select res.reservationid, res.hotelid, res.checkindate, res.guestid, guest.firstname, guest.lastname, hotel.hotelname, hotel.address as Hotel_Address, 
 hotel.city as Hotel_City, hotel.zipcode as Hotel_Zipcode, res.roomid, room.roomnumber, room.roomtype, guest.address as Guest_Address,
 guest.city as Guest_City, guest.zipcode as Guest_Zipcode
 from reservation res
