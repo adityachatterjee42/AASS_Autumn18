@@ -20,7 +20,7 @@ group by hotel.hotelname
 order by No_of_guests DESC
 
 -- mapping rooms with hotels and hotel name
-create view hotelroom as
+create view v_hotelroom as
 select h.hotelid, r.roomid, h.hotelname, 
 r.roomtype, r.roomnumber 
 from hotel h
