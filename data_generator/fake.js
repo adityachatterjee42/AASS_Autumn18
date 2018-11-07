@@ -10,7 +10,7 @@ const client = new Client ({
     user: 'masterusername',
     host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
     database: 'hotelreservation',
-    password: 'aass!!07poooooooo',
+    password: '',
     port: 5432
 });
 
