@@ -5,7 +5,7 @@ function createClient(){
         user: 'masterusername',
         host: 'rds-postgresql-hotelreservation.cqfnnuiplrsh.us-east-2.rds.amazonaws.com',
         database: 'hotelreservation',
-        password: 'aass!!07',
+        password: '',
         port: 5432
     });
 
