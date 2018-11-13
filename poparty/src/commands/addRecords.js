@@ -43,7 +43,7 @@ class AddRecordsCommand extends Command {
       this.log(`Attempting to insert ${rooms} room records into database`)
       await createRooms(rooms, hotels)
     }
-    if(reservations>0 && rooms>0 && hotels>0 && guests>0) {
+    if(reservations>0) {
       this.log(`Attempting to insert ${reservations} reservation records into database`)
       await createReservations(reservations, guests, hotels, rooms)
     }
